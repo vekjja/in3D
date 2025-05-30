@@ -2,12 +2,12 @@
 A relatively simple Go powered OpenGL Graphics Engine
 
 Create a new Window, Get OpenGL Context, Setup Camera Projection, create 3D object, Draw!  
-Go Ahead, you can do it yourself... `go get github.com/seemywingz/in3D`
+Go Ahead, you can do it yourself... `go get github.com/vekjja/in3D`
 ```go
 package main
 
 import (
-	"github.com/seemywingz/in3D"
+	"github.com/vekjja/in3D"
 )
 
 func main() {
@@ -17,7 +17,7 @@ func main() {
 		in3D.Position{X: 10, Y: 1, Z: 10}
 
 	in3D.SetRelPath("../assets/textures")
-	texture := in3D.NewTexture("seemywingz.jpg")
+	texture := in3D.NewTexture("vekjja.jpg")
 	color := []float32{1, 1, 1}
 
 	obj := in3D.NewPointsObject(
@@ -44,7 +44,7 @@ func main() {
 ### ME-TODO:
   *  Optimize all the things!  
   *  Add Shadows, Ambient Occulsion and other light related things  
-  * Have more fun making weird examples!  
+  *  Have fun making examples!  
 
 ### YOU-TODO:
   * Checkout the other examples to see some more basic functionality  
@@ -54,18 +54,15 @@ func main() {
 ```
 sudo apt install libgl1-mesa-dev libxrandr-dev libxcursor-dev libxi-dev libxinerama-dev
 
-go get github.com/seemywingz/in3D
+go get github.com/vekjja/in3D
 ```  
 ### Installation on Fedora
 ```sh
 sudo dnf install -y libXxf86vm-devel  mesa-libGL-devel mesa-libGLES-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel libX11-devel
 
-go get github.com/seemywingz/in3D
+go get github.com/vekjja/in3D
 ```
 
 ##### Make sure OpenGL 4.1 is supported by your system, drivers and hardware
-  
-##### Note:
-###### Some Names and method may change until version 1.0 is tagged
-###### Texture UVs are imported upside down due to the openGL/texture coordinate systems ( flip your texture vertiacally to render correctly  )
+
 
