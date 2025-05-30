@@ -10,14 +10,13 @@ import (
 
 	"github.com/go-gl/gl/v4.1-core/gl"
 	"github.com/go-gl/glfw/v3.3/glfw"
-	"github.com/seemywingz/go-toolbox"
 )
 
 // Init : initializes glfw and returns a Window to use, then initGL
 func Init(width, height int, title string) {
 	runtime.LockOSThread()
 
-	toolbox.EoE(glfw.Init(), "Error Initializing GLFW")
+	EoE(glfw.Init(), "Error Initializing GLFW")
 	glfw.WindowHint(glfw.Resizable, glfw.True)
 	glfw.WindowHint(glfw.ContextVersionMajor, 4)
 	glfw.WindowHint(glfw.ContextVersionMinor, 1)
@@ -33,7 +32,7 @@ func Init(width, height int, title string) {
 	} else {
 		Window, err = glfw.CreateWindow(width, height, title, nil, nil)
 	}
-	toolbox.EoE(err, "Error Creating GLFW Window")
+	EoE(err, "Error Creating GLFW Window")
 	Window.MakeContextCurrent()
 	initGL()
 	initShaders()
@@ -43,7 +42,7 @@ func Init(width, height int, title string) {
 
 // initGL : initialize GL setting and print version
 func initGL() {
-	toolbox.EoE(gl.Init(), "Error Initializing OpenGL")
+	EoE(gl.Init(), "Error Initializing OpenGL")
 
 	gl.Enable(gl.DEPTH_TEST)
 	gl.DepthFunc(gl.LESS)
@@ -60,7 +59,7 @@ func initGL() {
 
 // initShaders :
 func initShaders() {
-	toolbox.SetRelPath("shaders")
+	SetRelPath("shaders")
 	Shader["basic"] = NewShader("Vert.glsl", "basicFrag.glsl")
 	Shader["color"] = NewShader("Vert.glsl", "colorFrag.glsl")
 	Shader["texture"] = NewShader("Vert.glsl", "textureFrag.glsl")
@@ -117,7 +116,7 @@ func CompileShader(source string, shaderType uint32) uint32 {
 		log := strings.Repeat("\x00", int(logLength+1))
 		gl.GetShaderInfoLog(shader, logLength, nil, gl.Str(log))
 
-		toolbox.EoE(fmt.Errorf("failed to compile %v: %v", source, log), "Failed to Compile Source ")
+		EoE(fmt.Errorf("failed to compile %v: %v", source, log), "Failed to Compile Source ")
 	}
 
 	return shader
@@ -127,7 +126,7 @@ func CompileShader(source string, shaderType uint32) uint32 {
 func CompileShaderFromFile(sourceFile string, shaderType uint32) uint32 {
 
 	source, err := os.ReadFile(sourceFile)
-	toolbox.EoE(err, "Error Reading Source File")
+	EoE(err, "Error Reading Source File")
 
 	return CompileShader(string(source)+"\x00", shaderType)
 }
@@ -153,7 +152,7 @@ func NewShader(vertexShaderSourceFile, fragmentShaderSourceFile string) uint32 {
 		log := strings.Repeat("\x00", int(logLength+1))
 		gl.GetProgramInfoLog(program, logLength, nil, gl.Str(log))
 
-		toolbox.EoE(fmt.Errorf("failed to link program: %v", log), "Error Linking Shader Program:\n")
+		EoE(fmt.Errorf("failed to link program: %v", log), "Error Linking Shader Program:\n")
 	}
 
 	gl.DeleteShader(vertexShader)

@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/go-gl/mathgl/mgl32"
-	"github.com/seemywingz/go-toolbox"
 )
 
 // Mesh :
@@ -105,7 +104,7 @@ func buildVAOforMatGroup(group *MaterialGroup, vertexs, uvs, normals [][]float32
 // TODO: Fix  UV coords, they are upside down...
 func LoadObject(filename string, program uint32) *Mesh {
 	file, ferr := os.Open(filename)
-	toolbox.EoE(ferr, "Error Opening File")
+	EoE(ferr, "Error Opening File")
 	defer file.Close()
 
 	vertexs := [][]float32{}
@@ -135,40 +134,40 @@ func LoadObject(filename string, program uint32) *Mesh {
 			currentGroup = fields[1]
 		case "v":
 			if len(fields) != 4 {
-				toolbox.EoE(errors.New(filename), "Error Parsing Vertex too few feilds ")
+				EoE(errors.New(filename), "Error Parsing Vertex too few feilds ")
 			}
 			var v []float32
 			for i := 1; i < 4; i++ {
 				f, err := strconv.ParseFloat(fields[i], 32)
-				toolbox.EoE(err, "Failed to parse float")
+				EoE(err, "Failed to parse float")
 				v = append(v, float32(f))
 			}
 			vertexs = append(vertexs, v)
 		case "vt":
 			if len(fields) != 3 {
-				toolbox.EoE(errors.New(filename), "Error Parsing UV coords")
+				EoE(errors.New(filename), "Error Parsing UV coords")
 			}
 			var uv []float32
 			for i := 1; i < 3; i++ {
 				f, err := strconv.ParseFloat(fields[i], 32)
-				toolbox.EoE(err, "Failed to parse float")
+				EoE(err, "Failed to parse float")
 				uv = append(uv, float32(f))
 			}
 			uvs = append(uvs, uv)
 		case "vn":
 			if len(fields) != 4 {
-				toolbox.EoE(errors.New(filename+" "+line), "unsupported vertex normal line")
+				EoE(errors.New(filename+" "+line), "unsupported vertex normal line")
 			}
 			var n []float32
 			for i := 1; i < 4; i++ {
 				f, err := strconv.ParseFloat(fields[i], 32)
-				toolbox.EoE(err, "cannot parse float")
+				EoE(err, "cannot parse float")
 				n = append(n, float32(f))
 			}
 			normals = append(normals, n)
 		case "f":
 			if len(fields) != 4 {
-				toolbox.EoE(errors.New(filename), "unsupported face:"+string(rune(len(fields)))+" "+line)
+				EoE(errors.New(filename), "unsupported face:"+string(rune(len(fields)))+" "+line)
 			}
 			var (
 				vi, ui, ni []int
@@ -177,17 +176,17 @@ func LoadObject(filename string, program uint32) *Mesh {
 				faceStr := strings.Split(fields[i], "/")
 				svi, err := strconv.Atoi(faceStr[0])
 				vi = append(vi, svi)
-				toolbox.EoE(err, "unsupported face vertex index")
+				EoE(err, "unsupported face vertex index")
 				sni, err := strconv.Atoi(faceStr[2])
 				ni = append(ni, sni)
-				toolbox.EoE(err, "unsupported face normal index")
+				EoE(err, "unsupported face normal index")
 				if faceStr[1] == "" {
 					// set negative value as placeholder for .obj with no UV mapping
 					faceStr[1] = "-1"
 				}
 				sui, err := strconv.Atoi(faceStr[1])
 				ui = append(ui, sui)
-				toolbox.EoE(err, "unsupported face uv index")
+				EoE(err, "unsupported face uv index")
 			}
 			materialGroups[currentGroup].Faces = append(materialGroups[currentGroup].Faces, &Face{vi, ui, ni})
 		}
@@ -204,7 +203,7 @@ func LoadObject(filename string, program uint32) *Mesh {
 func LoadMaterials(filename string) map[string]*MaterialGroup {
 
 	file, ferr := os.Open(filename)
-	toolbox.EoE(ferr, "Error Opening Material File")
+	EoE(ferr, "Error Opening Material File")
 	defer file.Close()
 
 	line := ""
@@ -225,7 +224,7 @@ func LoadMaterials(filename string) map[string]*MaterialGroup {
 
 		if fields[0] == "newmtl" {
 			if len(fields) != 2 {
-				toolbox.EoE(errors.New(filename), "unsupported material definition")
+				EoE(errors.New(filename), "unsupported material definition")
 			}
 			currentMat = fields[1]
 			material := &Material{
@@ -246,44 +245,44 @@ func LoadMaterials(filename string) map[string]*MaterialGroup {
 		switch fields[0] {
 		case "Ka":
 			if len(fields) != 4 {
-				toolbox.EoE(errors.New(filename), "unsupported ambient color line")
+				EoE(errors.New(filename), "unsupported ambient color line")
 			}
 			for i := 0; i < 3; i++ {
 				f, err := strconv.ParseFloat(fields[i+1], 32)
-				toolbox.EoE(err, "Error parsing float")
+				EoE(err, "Error parsing float")
 				materialGroups[currentMat].Material.Ambient[i] = float32(f)
 			}
 		case "Kd":
 			if len(fields) != 4 {
-				toolbox.EoE(errors.New(filename), "Error Diffuse Parse")
+				EoE(errors.New(filename), "Error Diffuse Parse")
 			}
 			for i := 0; i < 3; i++ {
 				f, err := strconv.ParseFloat(fields[i+1], 32)
-				toolbox.EoE(err, "Error parsing float")
+				EoE(err, "Error parsing float")
 				materialGroups[currentMat].Material.Diffuse[i] = float32(f)
 			}
 		case "Ks":
 			if len(fields) != 4 {
-				toolbox.EoE(errors.New(filename), "Error KS Parse")
+				EoE(errors.New(filename), "Error KS Parse")
 			}
 			for i := 0; i < 3; i++ {
 				f, err := strconv.ParseFloat(fields[i+1], 32)
-				toolbox.EoE(err, "Error parsing float")
+				EoE(err, "Error parsing float")
 				materialGroups[currentMat].Material.Specular[i] = float32(f)
 			}
 		case "Ns":
 			if len(fields) != 2 {
-				toolbox.EoE(errors.New(filename), "Error NS Parse")
+				EoE(errors.New(filename), "Error NS Parse")
 			}
 			f, err := strconv.ParseFloat(fields[1], 32)
-			toolbox.EoE(err, "Error parsing float")
+			EoE(err, "Error parsing float")
 			materialGroups[currentMat].Material.Shininess = float32(f / 1000 * 128)
 		// case "d":
 		// 	if len(fields) != 2 {
-		// 	    toolbox.EoE("Error d Parse", errors.New(filename))
+		// 	    EoE("Error d Parse", errors.New(filename))
 		// 	}
 		// 	f, err := strconv.ParseFloat(fields[1], 32)
-		//     toolbox.EoE("Error parsing float", err)
+		//     EoE("Error parsing float", err)
 		// 	materialGroups[currentMat].Material.Shininess = float32(f)
 		case "map_Kd":
 			DiffuseTexFile := fields[1]
@@ -296,6 +295,6 @@ func LoadMaterials(filename string) map[string]*MaterialGroup {
 		}
 	}
 
-	toolbox.EoE(scanner.Err(), "Scann Error")
+	EoE(scanner.Err(), "Scann Error")
 	return materialGroups
 }
