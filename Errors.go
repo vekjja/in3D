@@ -17,7 +17,7 @@ func FormatError(err error, msg ...string) error {
 	errMsg := ""
 	if len(msg) > 0 {
 		for _, m := range msg {
-			errMsg += RedTX(m)
+			errMsg += RedTX(m) + ": "
 		}
 	}
 	errMsg += err.Error()
