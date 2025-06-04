@@ -37,13 +37,14 @@ func randLights(numberOfLights, min, max int) {
 		x, y, z := toolbox.RandInt(min, max), toolbox.RandInt(min, max), toolbox.RandInt(min, max)
 		rx, ry, rz := toolbox.RandFloat(), toolbox.RandFloat(), toolbox.RandFloat()
 		color := []float32{rx, ry, rz}
-		roamingLight := in3d.NewColorLight([]float32{0.1, 0.1, 0.1}, color, color)
+		roamingLight := in3d.NewColorLight([]float32{0.5, 0.5, 0.5}, color, color)
 		roamingLight.Position = in3d.NewPosition(float32(x), float32(y), float32(z))
 		roamingLight.Draw = true
+		speed := float32(0.5)
 		roamingLight.SceneLogic = func(s *in3d.SceneData) {
-			s.X += rx * 1.2
-			s.Y += ry * 1.2
-			s.Z += rz * 1.2
+			s.X += rx * speed
+			s.Y += ry * speed
+			s.Z += rz * speed
 			if s.X > float32(max) || s.X < float32(min) {
 				rx = -rx
 			}
@@ -85,9 +86,9 @@ func main() {
 	randObjects(100, min, max, in3d.Cube, texture["box1"], in3d.Shader["phong"])
 	randLights(9, min, max)
 
-	// centerLight := in3d.NewLight()
-	// centerLight.Draw = true
-	// println(centerLight.DrawnObject.IdifID)
+	centerLight := in3d.NewLight()
+	centerLight.Draw = true
+	println(centerLight.DrawnObject.IdifID)
 
 	for !in3d.ShouldClose() {
 		in3d.Update()
